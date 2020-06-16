@@ -11,7 +11,7 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   Login(data: Auth): Observable<any> {
-    const URL = `http://127.0.0.1:8000/api`;
+    const URL = ` http://192.168.10.139:8000/api`;
     return this.http.post(`${URL}/login`, data);
   }
 }

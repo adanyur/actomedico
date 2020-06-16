@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 //
 import { AuthService } from './service/auth.service';
 import { StorageService } from '../core/services/storage.service';
@@ -17,7 +18,8 @@ export class AuthComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -35,5 +37,6 @@ export class AuthComponent implements OnInit {
 
   private correctLogin(data: Session) {
     this.storageService.setSession(data);
+    this.router.navigate(['actomedico']);
   }
 }

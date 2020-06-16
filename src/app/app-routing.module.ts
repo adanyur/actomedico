@@ -7,7 +7,7 @@ import { ActoMedicoComponent } from './components/acto-medico/acto-medico.compon
 const routes: Routes = [
   { path: '', component: AuthComponent },
   { path: 'pacientes', component: PacienteCitadosComponent },
-  { path: 'acto-medico', component: ActoMedicoComponent },
+  { path: 'actomedico', component: ActoMedicoComponent },
 ];
 
 @NgModule({
