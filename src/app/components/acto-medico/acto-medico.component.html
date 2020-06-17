@@ -1,4 +1,4 @@
-<form [formGroup]="formActaMedica">
+<form [formGroup]="formActaMedica" (ngSubmit)="postRegistroActoMedico()">
   <div class="container p-4">
     <div class="card border-0" style="background-color: white;">
       <div class="card-body">
@@ -6,10 +6,12 @@
         <div class="card mr-3 ml-3 border-0 shadow-card">
           <div class="card-body">
             <div class="card-title"><h4>Datos del Paciente</h4></div>
-            <ul>
-              <li *ngFor="let paciente of pacientes">
-                {{ paciente.medico }}
-              </li>
+            <ul *ngFor="let paciente of pacientes">
+              <li>{{ paciente.historia }}</li>
+              <li>{{ paciente.edad }}</li>
+              <li>{{ paciente.paciente }}</li>
+              <li>{{ paciente.medico }}</li>
+              <li>{{ paciente.especialidad }}</li>
             </ul>
           </div>
         </div>
@@ -22,18 +24,21 @@
                   <textarea
                     class="form-control"
                     placeholder="Motivo de Consulta"
+                    formControlName="motivo"
                   ></textarea>
                 </div>
                 <div class="form-group">
                   <textarea
                     class="form-control"
                     placeholder="Enfermedad o Problema Actual"
+                    formControlName="enfermedad"
                   ></textarea>
                 </div>
                 <div class="form-group">
                   <textarea
                     class="form-control"
                     placeholder="Examen Fisico"
+                    formControlName="examen"
                   ></textarea>
                 </div>
               </div>
@@ -51,6 +56,7 @@
                         name=""
                         id=""
                         class="form-control"
+                        formControlName="arterial"
                         placeholder="Presion Arterial"
                       />
                     </div>
@@ -60,6 +66,7 @@
                         name=""
                         id=""
                         class="form-control"
+                        formControlName="cardiaca"
                         placeholder="Frencuencia Cardiaca(min)"
                       />
                     </div>
@@ -69,6 +76,7 @@
                         name=""
                         id=""
                         class="form-control"
+                        formControlName="respiratorio"
                         placeholder="Frencuencia Respiratoria(min)"
                       />
                     </div>
@@ -78,6 +86,7 @@
                         name=""
                         id=""
                         class="form-control"
+                        formControlName="bucal"
                         placeholder="Temperatura Bucal(c)"
                       />
                     </div>
@@ -87,7 +96,8 @@
                         name=""
                         id=""
                         class="form-control"
-                        placeholder="Temperatura Axiliar(c)"
+                        formControlName="axilar"
+                        placeholder="Temperatura Axilar(c)"
                       />
                     </div>
                   </div>
@@ -98,6 +108,7 @@
                         name=""
                         id=""
                         class="form-control"
+                        formControlName="peso"
                         placeholder="Peso(kg)"
                       />
                     </div>
@@ -107,6 +118,7 @@
                         name=""
                         id=""
                         class="form-control"
+                        formControlName="talla"
                         placeholder="Talla(m)"
                       />
                     </div>
@@ -116,6 +128,7 @@
                         name=""
                         id=""
                         class="form-control"
+                        formControlName="mcorporal"
                         placeholder="I. Masa corporal"
                       />
                     </div>
@@ -125,6 +138,7 @@
                         name=""
                         id=""
                         class="form-control"
+                        formControlName="cefalico"
                         placeholder="Perimetro Cefalico(cm)"
                       />
                     </div>
@@ -133,24 +147,33 @@
               </div>
             </div>
           </div>
-
           <div class="w-50 mw-50 px-2">
             <div class="card mt-3 border-0 shadow-card">
               <div class="card-body">
                 <div class="card-title mb-4"><h4>Antecedentes</h4></div>
                 <div class="form-group">
-                  <select class="form-control">
-                    <option>Personales</option>
+                  <select class="form-control" formControlName="anPersonales">
+                    <option value="null">Personales</option>
+                    <option
+                      *ngFor="let personal of antPersonales" 
+                      [ngValue]="personal.an_codigo" 
+                      >
+                      {{ personal.an_descripcion }}</option
+                    >
                   </select>
                 </div>
                 <div class="form-group">
-                  <select class="form-control">
-                    <option>Alergias</option>
+                  <select class="form-control" formControlName="anEnergias">
+                    <!-- <option value="null">Alergias</option>
+                    <option *ngFor="let antecedente of antecedentes" [ngValue]="antecedente.an_codigo">
+                      {{ antecedente.an_descripcion }}
+                    </option> -->
                   </select>
                 </div>
                 <div class="form-group">
-                  <select class="form-control">
-                    <option>Familiares</option>
+                  <select class="form-control" formControlName="anFamiliares">
+                    <option value="null">Familiares</option>
+                    <option value="2">otros</option>
                   </select>
                 </div>
               </div>
@@ -164,6 +187,7 @@
                     name=""
                     id=""
                     class="form-control"
+                    formControlName="cie"
                     placeholder="Cie10"
                   />
                 </div>
@@ -174,7 +198,7 @@
       </div>
       <div class="row justify-content-center">
         <div class="col-md-6">
-          <button type="submit" (click)="getDatoPaciente()">
+          <button type="submit">
             <h5>Generar Acto Medico</h5>
           </button>
         </div>
