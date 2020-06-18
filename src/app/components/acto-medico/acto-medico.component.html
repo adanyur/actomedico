@@ -155,19 +155,22 @@
                   <select class="form-control" formControlName="anPersonales">
                     <option value="null">Personales</option>
                     <option
-                      *ngFor="let personal of antPersonales" 
-                      [ngValue]="personal.an_codigo" 
-                      >
+                      *ngFor="let personal of antPersonales"
+                      [ngValue]="personal.an_codigo"
+                    >
                       {{ personal.an_descripcion }}</option
                     >
                   </select>
                 </div>
                 <div class="form-group">
                   <select class="form-control" formControlName="anEnergias">
-                    <!-- <option value="null">Alergias</option>
-                    <option *ngFor="let antecedente of antecedentes" [ngValue]="antecedente.an_codigo">
-                      {{ antecedente.an_descripcion }}
-                    </option> -->
+                    <option value="null">Alergias</option>
+                    <option
+                      *ngFor="let personal of antPersonales"
+                      [ngValue]="personal.an_codigo"
+                    >
+                      {{ personal.an_descripcion }}
+                    </option>
                   </select>
                 </div>
                 <div class="form-group">

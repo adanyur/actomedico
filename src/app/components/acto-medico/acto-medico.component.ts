@@ -21,9 +21,8 @@ export class ActoMedicoComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private dataService: DataService) {
     this.getDatoPaciente();
-    // this.getAntecedentes('PERSONALES');
-    // this.getAntecedentes('FAMILIARES');
-    // this.getAntecedentes('ALERGIAS');
+    //this.getAntecedentes();
+    this.filter();
     // this.getCie();
   }
 
@@ -54,10 +53,9 @@ export class ActoMedicoComponent implements OnInit {
     });
   }
 
-  getAntecedentesPersonales(id: number) {
-    this.dataService.listadoAntecedentes(id).subscribe((data) => {
-      this.antPersonales = data[0].an_destipo === 'PERSONALES' ? data : null;
-      console.log(data);
+  getAntecedentes() {
+    this.dataService.listadoAntecedentes().subscribe((data) => {
+      this.antPersonales = data;
     });
   }
 
@@ -67,5 +65,9 @@ export class ActoMedicoComponent implements OnInit {
 
   postRegistroActoMedico() {
     console.log(this.formActaMedica.value);
+  }
+
+  filter() {
+    this.dataService.listado().subscribe((data) => console.log(data));
   }
 }
