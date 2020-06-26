@@ -6,12 +6,12 @@
         <div class="card mr-3 ml-3 border-0 shadow-card">
           <div class="card-body">
             <div class="card-title"><h4>Datos del Paciente</h4></div>
-            <ul *ngFor="let paciente of pacientes">
-              <li>{{ paciente.historia }}</li>
-              <li>{{ paciente.edad }}</li>
-              <li>{{ paciente.paciente }}</li>
-              <li>{{ paciente.medico }}</li>
-              <li>{{ paciente.especialidad }}</li>
+              <ul *ngFor="let paciente of pacientes">              
+                <li><span>Historia: </span>{{ paciente.ci_numhist }}</li>
+                <li><span>Edad: </span>{{ paciente.ci_edad }}</li>
+                <li><span>Paciente: </span>{{ paciente.nombre_completo }}</li>
+                <li><span>Medico: </span>{{ paciente.medico.me_nombres }}</li>
+                <li><span>Especialidad: </span>{{ paciente.especialidad.es_descripcion }}</li>
             </ul>
           </div>
         </div>
@@ -152,8 +152,8 @@
               <div class="card-body">
                 <div class="card-title mb-4"><h4>Antecedentes</h4></div>
                 <div class="form-group">
-                  <select class="form-control" formControlName="anPersonales">
-                    <option value="null">Personales</option>
+                  <select class="custom-select form-control" formControlName="anPersonales">
+                    <option value="null">PERSONALES Y ALERGIAS</option>
                     <option
                       *ngFor="let personal of antPersonales"
                       [ngValue]="personal.an_codigo"
@@ -163,20 +163,14 @@
                   </select>
                 </div>
                 <div class="form-group">
-                  <select class="form-control" formControlName="anEnergias">
-                    <option value="null">Alergias</option>
+                  <select class="custom-select form-control" formControlName="anEnergias">
+                    <option value="null">FAMILIARES</option>
                     <option
-                      *ngFor="let personal of antPersonales"
-                      [ngValue]="personal.an_codigo"
-                    >
-                      {{ personal.an_descripcion }}
-                    </option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <select class="form-control" formControlName="anFamiliares">
-                    <option value="null">Familiares</option>
-                    <option value="2">otros</option>
+                    *ngFor="let familiares of antFamiliares"
+                    [ngValue]="familiares.an_codigo"
+                  >
+                    {{ familiares.an_descripcion }}</option
+                  >
                   </select>
                 </div>
               </div>
@@ -190,10 +184,39 @@
                     name=""
                     id=""
                     class="form-control"
-                    formControlName="cie"
+                    [formControl]="inpcie"
                     placeholder="Cie10"
                   />
                 </div>
+                <div class="mb-2">
+                  <ul class="list-group">
+                    <li
+                      (click)="addCie(cie)"
+                      class="list-group-item"
+                      *ngFor="
+                        let cie of cies
+                          | paginate: { itemsPerPage: 5, currentPage: page }
+                      "
+                    >
+                      <span
+                        ><b>{{ cie.codigo }}</b></span
+                      >
+                      {{ cie.descripcion }}
+                    </li>
+                    <li class="list-group-item" *ngIf="cies">
+                      <pagination-controls
+                        (pageChange)="page = $event"
+                      ></pagination-controls>
+                    </li>
+                  </ul>
+                </div>
+
+                <ul class="list-group">
+                  <li class="list-group-item">Cie seleccionado</li>
+                  <li (click)="deleteCie(selectCie)" class="list-group-item" *ngFor="let selectCie of selectCies" >
+                    <b>{{ selectCie.codigo }}</b>{{ selectCie.descripcion }}
+                  </li>
+                </ul>
               </div>
             </div>
           </div>

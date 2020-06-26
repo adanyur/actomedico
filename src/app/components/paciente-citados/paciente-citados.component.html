@@ -1,6 +1,16 @@
 <div class="container p-4">
-    <ul *ngFor="let a of paciente">
-        <li>{{a.nombre_completo}}</li>
-    </ul>
+  <table class="table">
+    <thead>
+      <tr>
+        <td><h5>Descripcion</h5></td>
+        <td><h5>Tipo</h5></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ant of ants">
+        <td>{{ ant.an_descripcion }}</td>
+        <td>{{ ant.an_destipo }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
-

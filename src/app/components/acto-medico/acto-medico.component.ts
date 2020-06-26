@@ -1,11 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormControl,
+} from '@angular/forms';
 import { from } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
 //
 import { DataService } from '../../core/services/data.service';
 //
 import { Paciente } from '../../core/models/paciente.models';
+import { Ant } from '../../core/models/ant.models';
 
 @Component({
   selector: 'app-acto-medico',
@@ -14,19 +20,17 @@ import { Paciente } from '../../core/models/paciente.models';
 })
 export class ActoMedicoComponent implements OnInit {
   formActaMedica: FormGroup;
+  inpcie: FormControl;
   pacientes: any;
-  antPersonales: any;
-  antFamiliares: any;
-  antAlergias: any;
+  idcita: any;
+  antPersonales = [];
+  antFamiliares = [];
+  antAlergias = [];
+  selectCies = [];
+  cies: any;
+  page: number = 1;
 
   constructor(private fb: FormBuilder, private dataService: DataService) {
-    this.getDatoPaciente();
-    //this.getAntecedentes();
-    this.filter();
-    // this.getCie();
-  }
-
-  ngOnInit(): void {
     this.formActaMedica = this.fb.group({
       motivo: [null, Validators.required],
       enfermedad: [null, Validators.required],
@@ -43,31 +47,68 @@ export class ActoMedicoComponent implements OnInit {
       anPersonales: [null, Validators.required],
       anEnergias: [null, Validators.required],
       anFamiliares: [null, Validators.required],
-      cie: [null, Validators.required],
     });
   }
 
-  getDatoPaciente() {
-    this.dataService.datoPaciente().subscribe((data: Paciente) => {
-      this.pacientes = Object.values(data);
+  ngOnInit(): void {
+    this.inpcie = new FormControl();
+    this.inpcie.valueChanges
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((data: string) => {
+        this.getCie(data.toUpperCase());
+      });
+    this.getDatoPaciente();
+    this.getAntecedentes();
+  }
+
+  getDatoPaciente(): void {
+    this.dataService.datoPaciente().subscribe((paciente) => {
+      this.pacientes = paciente;
     });
   }
 
-  getAntecedentes() {
-    this.dataService.listadoAntecedentes().subscribe((data) => {
-      this.antPersonales = data;
+  getAntecedentes(): void {
+    this.dataService.listadoAntecedentes().subscribe((ant) => {
+      this.personales(ant);
+      this.familiares(ant);
+    });
+  }
+  /********************************************/
+
+  personales(data: any) {
+    from(data)
+      .pipe(
+        filter(
+          (person: Ant) =>
+            person.an_destipo === 'PERSONALES' ||
+            person.an_destipo === 'ALERGIAS'
+        )
+      )
+      .subscribe((data: Ant) => this.antPersonales.push(data));
+  }
+
+  familiares(data: any) {
+    from(data)
+      .pipe(filter((person: Ant) => person.an_destipo === 'FAMILIARES'))
+      .subscribe((data: Ant) => this.antFamiliares.push(data));
+  }
+
+  /********************************************/
+  getCie(data: string): void {
+    this.dataService.searchCie(data).subscribe((data) => {
+      this.cies = data;
     });
   }
 
-  getCie() {
-    this.dataService.listadoCie().subscribe((data) => console.log(data));
+  addCie(data: any): void {
+    this.selectCies.push(data);
+  }
+
+  deleteCie(data: any) {
+    this.selectCies.splice(this.selectCies.indexOf(data), 1);
   }
 
   postRegistroActoMedico() {
-    console.log(this.formActaMedica.value);
-  }
-
-  filter() {
-    this.dataService.listado().subscribe((data) => console.log(data));
+    console.log(this.selectCies);
   }
 }

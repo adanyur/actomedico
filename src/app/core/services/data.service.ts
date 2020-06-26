@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map, filter, tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 //
 import { StorageService } from './storage.service';
 //
 import { Session } from '../models/session.models';
 import { Paciente } from '../models/paciente.models';
+import { Ant } from '../models/ant.models';
+import { ActoMedico } from '../models/acto-medico.models';
+import { Cie } from '../models/cie.models';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +17,8 @@ import { Paciente } from '../models/paciente.models';
 export class DataService {
   header: HttpHeaders;
   token: Session;
+  actoMedico: ActoMedico;
+
   constructor(
     private http: HttpClient,
     private storageService: StorageService
@@ -21,7 +26,8 @@ export class DataService {
     this.token = this.storageService.getSessionData();
     this.header = new HttpHeaders({
       Accept: 'application/json',
-      Authorization: `Bearer ${this.token['data'].token}`,
+      //Authorization: `Bearer ${this.token['data'].token}`,
+      Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiODAyYWM1MGFmNjZmNGUzNTdlMjZiNzNmZGQ1NjFlZGJiMjZjMjU1YWU5ZGM1MmY1MDExZDRjZTI1MTgzNjcwM2JkNDEzNzlkNDJkNmZiOGUiLCJpYXQiOjE1OTMxODQ2NjgsIm5iZiI6MTU5MzE4NDY2OCwiZXhwIjoxNjI0NzIwNjY4LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.pdfrzlZ_8slc42MCgRVLr2bhKk9XIGKn3dpGcOSe1Cizfg_OVq71jXTtM3hf568a4UJh5LvCYuuqW4szdS7PXM-XmQWIcHHVJexDpNkmvwwmlykcP8evotLQPT8OMz5sorZW_yjYwKtDTV611ViXYueUMvTrBWa6rz0Y91IW_kmrohpI42OtYxsuYOP9DzVLP9_mP9jteeSf6O7ULnnIXU0Fcs1UGh_raPlyrrPEgnw8T5dcTlMty-REu0DDBWj3KK2EG02LbNf-xtj5EkFnpYgW58-4yn3NsvRQxd8rcMlRXqcGpBS5e8TOm-nWlF1G7NC3ZQpwhF_mHaCALfFyPvEuuyQxvH1pVGCUgYmOjTl3bjCMKcV_NdQAg8u-p4NskFCBvCdmkTvH0Vfsfu0RgobwT69ZUMq9galaTBwA6YK7E1kWKhrIVwATaXeKCJQAlOLFiXrJhjVb3IGpCDGJRCd8spewRo4AS9n1CttZ7ynGZCrT7iiXnIL5RdA0yLUAS3iIRqvCr9KfBu1M_Y7Zoqs8rFfQvi_YM5kXvPSDo08_ViBisfA9gWBANepF1_NxAQlYqVRW2QPkuwnJbCr6Z0vJodFozR9efrf7NQGtBnABO9YriVnZaGRoxWoV_Y6PaKJfbWXsvEApsBOP36DWF7e7HJ80Q1czX6CGYe6utpY`,
     });
   }
 
@@ -32,29 +38,48 @@ export class DataService {
     });
   }
 
-  listadoAntecedentes(): Observable<any> {
+  listadoAntecedentes(): Observable<Ant[]> {
     const URL = `http://192.168.10.139:8001/api`;
-    return this.http.get(`${URL}/antecedentes?id=1`, {
+    return this.http.get<Ant[]>(`${URL}/antecedentes`, {
       headers: this.header,
     });
   }
 
-  listadoCie() {
-    const URL = `http://192.168.10.139:8001/api`;
-    return this.http.get(`${URL}/cies`, { headers: this.header });
-  }
-
-  listado(): Observable<any> {
-    const URL = `http://192.168.10.139:8001/api`;
+  searchCie(term: string): Observable<Cie[]> {
+    if (!term.trim()) {
+      return of([]);
+    }
+    const URL = `http://192.168.10.139:8001/api/cies?search=${term}`;
     return this.http
-      .get<any>(`${URL}/antecedentes`, { headers: this.header })
-      .pipe(filter((ant) => ant));
+      .get<Cie[]>(URL, { headers: this.header })
+      .pipe(catchError(this.handleError<Cie[]>('searchCie', [])));
   }
 
-  // pacienteCitados() {
-  //   const URL = `http://192.168.10.139:8001/api`;
-  //   return this.http.get(`${URL}/citas?fecha=2020-06-16&medico=147`, {
-  //     headers: this.header,
-  //   });
-  // }
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+      console.error(error);
+      return of(result as T);
+    };
+  }
+
+  ActoMedico(data: any, id: number) {
+    this.actoMedico = {
+      idcita: id,
+      motivo: data.motivo,
+      problema: data.enfermedad,
+      parterial: data.arterial,
+      fcardiaca: data.cardiaca,
+      frespiratoria: data.respiratorio,
+      tbucal: data.bucal,
+      taxiliar: data.axilar,
+      peso: data.peso,
+      talla: data.talla,
+      icorporal: data.mcorporal,
+      pcefalico: data.cefalico,
+      examen: data.examen,
+    };
+
+    const URL = `http://192.168.10.139:8001/api/actomedicos`;
+    return this.http.post(URL, this.actoMedico, { headers: this.header });
+  }
 }

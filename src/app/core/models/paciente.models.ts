@@ -1,10 +1,10 @@
 export interface Paciente {
-  id?: number;
-  hora?: string;
-  fecha?: string;
-  historia?: string;
-  edad?: string;
-  especialidad?: string;
-  medico?: string;
-  paciente?: string;
+  ci_edad: string;
+  ci_fechacita: Date;
+  ci_horatencion: string;
+  ci_idcita: number;
+  ci_numhist: string;
+  especialidad: [];
+  medico: [];
+  nombre_completo: string;
 }
