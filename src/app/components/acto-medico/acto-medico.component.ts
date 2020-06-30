@@ -1,10 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { from } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
 //
@@ -12,6 +7,8 @@ import { DataService } from '../../core/services/data.service';
 //
 import { Paciente } from '../../core/models/paciente.models';
 import { Ant } from '../../core/models/ant.models';
+import { CieSelect } from '../../core/models/cie-select.models';
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-acto-medico',
@@ -20,13 +17,12 @@ import { Ant } from '../../core/models/ant.models';
 })
 export class ActoMedicoComponent implements OnInit {
   formActaMedica: FormGroup;
-  inpcie: FormControl;
   pacientes: any;
   idcita: any;
   antPersonales = [];
   antFamiliares = [];
-  antAlergias = [];
   selectCies = [];
+  cieSelect: CieSelect;
   cies: any;
   page: number = 1;
 
@@ -45,18 +41,16 @@ export class ActoMedicoComponent implements OnInit {
       mcorporal: [null, Validators.required],
       cefalico: [null, Validators.required],
       anPersonales: [null, Validators.required],
-      anEnergias: [null, Validators.required],
       anFamiliares: [null, Validators.required],
+      inpcie: [null, Validators.required],
     });
   }
 
   ngOnInit(): void {
-    this.inpcie = new FormControl();
-    this.inpcie.valueChanges
-      .pipe(debounceTime(300), distinctUntilChanged())
-      .subscribe((data: string) => {
-        this.getCie(data.toUpperCase());
-      });
+    this.formActaMedica
+      .get('inpcie')
+      .valueChanges.pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((data: string) => this.getCie(data.toUpperCase()));
     this.getDatoPaciente();
     this.getAntecedentes();
   }
@@ -64,6 +58,7 @@ export class ActoMedicoComponent implements OnInit {
   getDatoPaciente(): void {
     this.dataService.datoPaciente().subscribe((paciente) => {
       this.pacientes = paciente;
+      this.idcita = paciente;
     });
   }
 
@@ -101,14 +96,39 @@ export class ActoMedicoComponent implements OnInit {
   }
 
   addCie(data: any): void {
-    this.selectCies.push(data);
+    if (
+      this.selectCies.find((resutl) => resutl.codigo === data.codigo) !==
+      undefined
+    ) {
+      swal.fire('Seleccionar otro cie', '', 'error');
+      return;
+    }
+
+    this.cieSelect = {
+      codigo: data.codigo,
+      descripcion: data.descripcion,
+      tdiag: 1,
+    };
+
+    this.selectCies.push(this.cieSelect);
   }
 
   deleteCie(data: any) {
     this.selectCies.splice(this.selectCies.indexOf(data), 1);
   }
 
+  updateCie(data: any, codigo: any) {
+    let indice = this.selectCies.indexOf(codigo);
+    this.selectCies[indice].tdiag = data.target.value;
+  }
+
   postRegistroActoMedico() {
-    console.log(this.selectCies);
+    this.dataService
+      .ActoMedico(
+        this.formActaMedica.value,
+        this.idcita[0].ci_idcita,
+        this.selectCies
+      )
+      .subscribe((data) => console.log(data));
   }
 }

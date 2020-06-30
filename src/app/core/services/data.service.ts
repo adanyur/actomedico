@@ -62,7 +62,7 @@ export class DataService {
     };
   }
 
-  ActoMedico(data: any, id: number) {
+  ActoMedico(data: any, id: number, cie: any) {
     this.actoMedico = {
       idcita: id,
       motivo: data.motivo,
@@ -77,8 +77,16 @@ export class DataService {
       icorporal: data.mcorporal,
       pcefalico: data.cefalico,
       examen: data.examen,
+      dx1: cie[0].codigo,
+      desx1: cie[0].descripcion,
+      tdx1: cie[0].tdiag,
+      dx2: cie[1].codigo,
+      desx2: cie[1].descripcion,
+      tdx2: cie[1].tdiag,
+      dx3: cie[2].codigo,
+      desx3: cie[2].descripcion,
+      tdx3: cie[2].tdiag,
     };
-
     const URL = `http://192.168.10.139:8001/api/actomedicos`;
     return this.http.post(URL, this.actoMedico, { headers: this.header });
   }

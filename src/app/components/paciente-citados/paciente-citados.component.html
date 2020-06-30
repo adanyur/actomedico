@@ -1,16 +1,17 @@
 <div class="container p-4">
-  <table class="table">
-    <thead>
-      <tr>
-        <td><h5>Descripcion</h5></td>
-        <td><h5>Tipo</h5></td>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let ant of ants">
-        <td>{{ ant.an_descripcion }}</td>
-        <td>{{ ant.an_destipo }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="card">
+    <div class="card-body">
+      <div class="d-flex justify-content-between">
+        <div class="card-title"><b>Z00.1</b></div>
+      </div>
+      <div class="card-text mb-3 mt-2">
+        Hernia inguinal unilateral o no especificada, con obstrucción, sin
+        gangrena
+      </div>
+      <div class="d-flex justify-content-between">
+        <button class="btn btn-danger">Definitivo</button>
+        <button class="btn btn-danger">Presuntivo</button>
+      </div>
+    </div>
+  </div>
 </div>
