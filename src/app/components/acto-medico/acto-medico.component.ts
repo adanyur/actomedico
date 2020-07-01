@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { from } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
+import { from, Observable, combineLatest } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  map,
+} from 'rxjs/operators';
 //
 import { DataService } from '../../core/services/data.service';
 //
@@ -17,7 +22,7 @@ import swal from 'sweetalert2';
 })
 export class ActoMedicoComponent implements OnInit {
   formActaMedica: FormGroup;
-  pacientes: any;
+  pacientes: Paciente;
   idcita: any;
   antPersonales = [];
   antFamiliares = [];
@@ -53,12 +58,23 @@ export class ActoMedicoComponent implements OnInit {
       .subscribe((data: string) => this.getCie(data.toUpperCase()));
     this.getDatoPaciente();
     this.getAntecedentes();
+    this.IMC();
+  }
+
+  IMC() {
+    let peso$ = this.formActaMedica.get('peso').valueChanges;
+    let talla$ = this.formActaMedica.get('talla').valueChanges;
+    combineLatest(peso$, talla$)
+      .pipe(map(([peso, talla]) => peso * talla))
+      .subscribe((data) =>
+        this.formActaMedica.controls.mcorporal.setValue(data)
+      );
   }
 
   getDatoPaciente(): void {
-    this.dataService.datoPaciente().subscribe((paciente) => {
-      this.pacientes = paciente;
-      this.idcita = paciente;
+    this.dataService.datoPaciente().subscribe((paciente?: Paciente) => {
+      this.pacientes = paciente['data'];
+      this.idcita = paciente['data'];
     });
   }
 
@@ -84,23 +100,23 @@ export class ActoMedicoComponent implements OnInit {
 
   familiares(data: any) {
     from(data)
-      .pipe(filter((person: Ant) => person.an_destipo === 'FAMILIARES'))
+      .pipe(filter((fam: Ant) => fam.an_destipo === 'FAMILIARES'))
       .subscribe((data: Ant) => this.antFamiliares.push(data));
   }
 
-  /********************************************/
   getCie(data: string): void {
     this.dataService.searchCie(data).subscribe((data) => {
       this.cies = data;
     });
   }
+  /********************************************/
 
   addCie(data: any): void {
     if (
       this.selectCies.find((resutl) => resutl.codigo === data.codigo) !==
       undefined
     ) {
-      swal.fire('Seleccionar otro cie', '', 'error');
+      swal.fire('Ya selecciono el cie', '', 'error');
       return;
     }
 
