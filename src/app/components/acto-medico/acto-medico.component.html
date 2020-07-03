@@ -1,4 +1,8 @@
-<form [formGroup]="formActaMedica" (ngSubmit)="postRegistroActoMedico()">
+<form
+  [formGroup]="formActaMedica"
+  (ngSubmit)="postRegistroActoMedico()"
+  autocomplete="off"
+>
   <div class="container p-4">
     <div class="card border-0" style="background-color: white;">
       <div class="card-body">
@@ -61,6 +65,7 @@
                         class="form-control"
                         formControlName="arterial"
                         placeholder="Presion Arterial"
+                        autocomplete="on"
                       />
                     </div>
                     <div class="form-group">
@@ -70,6 +75,7 @@
                         class="form-control"
                         formControlName="cardiaca"
                         placeholder="Frencuencia Cardiaca(min)"
+                        autocomplete="on"
                       />
                     </div>
                     <div class="form-group">
@@ -79,6 +85,7 @@
                         class="form-control"
                         formControlName="respiratorio"
                         placeholder="Frencuencia Respiratoria(min)"
+                        autocomplete="on"
                       />
                     </div>
                     <div class="form-group">
@@ -88,6 +95,7 @@
                         class="form-control"
                         formControlName="bucal"
                         placeholder="Temperatura Bucal(c)"
+                        autocomplete="on"
                       />
                     </div>
                     <div class="form-group">
@@ -97,6 +105,7 @@
                         class="form-control"
                         formControlName="axilar"
                         placeholder="Temperatura Axilar(c)"
+                        autocomplete="on"
                       />
                     </div>
                   </div>

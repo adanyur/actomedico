@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { from, Observable, combineLatest } from 'rxjs';
+import { from, combineLatest } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -58,14 +58,14 @@ export class ActoMedicoComponent implements OnInit {
       .subscribe((data: string) => this.getCie(data.toUpperCase()));
     this.getDatoPaciente();
     this.getAntecedentes();
-    this.IMC();
+    this.CalcularIMC();
   }
 
-  IMC() {
+  CalcularIMC() {
     let peso$ = this.formActaMedica.get('peso').valueChanges;
     let talla$ = this.formActaMedica.get('talla').valueChanges;
     combineLatest(peso$, talla$)
-      .pipe(map(([peso, talla]) => peso * talla))
+      .pipe(map(([peso, talla]) => peso / (talla * talla)))
       .subscribe((data) =>
         this.formActaMedica.controls.mcorporal.setValue(data)
       );
