@@ -29,6 +29,7 @@
   border-radius: 0.25rem;
   transition: all 0.1s ease-in-out;
 }
+
 /*input*/
 .form-label-group input {
   height: auto;
@@ -73,7 +74,6 @@
 }
 
 /*TEXTAREA*/
-
 .form-label-group-textarea {
   position: relative;
   margin-bottom: 1rem;

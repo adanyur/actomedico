@@ -21,4 +21,7 @@ export interface ActoMedico {
   dx3: string;
   desx3: string;
   tdx3: number;
+  fecha: string;
+  usuario: string;
+  destino: number;
 }

@@ -4,147 +4,159 @@
   autocomplete="off"
 >
   <div class="container p-4">
-    <div class="card border-0" style="background-color: white;">
+    <div class="card border-0">
       <div class="card-body">
         <div class="card-title mb-4 text-center"><h1>Acto Medico</h1></div>
         <div class="card mr-3 ml-3 border-0 shadow-card">
           <div class="card-body">
-            <div class="card-title"><h4>Datos del Paciente</h4></div>
-            <ul>
-              <li><span>Historia: </span>{{ pacientes.historia }}</li>
-              <li><span>Edad: </span>{{ pacientes.edad }}</li>
-              <li><span>Paciente: </span>{{ pacientes.paciente }}</li>
-              <li><span>Sexo: </span>{{ pacientes.sexo }}</li>
-              <li>
-                <span>Fecha Nacimiento: </span>{{ pacientes.fecha_nacimiento }}
-              </li>
-              <li><span>Medico: </span>{{ pacientes.medico }}</li>
-              <li><span>Especialidad: </span>{{ pacientes.especialidad }}</li>
-            </ul>
+            <div class="card-title mb-4"><h4>Datos del paciente</h4></div>
+            <div class="card-text">
+              <ul *ngFor="let paciente of pacientes; index as i">
+                <li><b>Paciente :</b> {{ paciente.nombre_completo }}</li>
+                <li><b>Medico :</b> {{ paciente.medico[i].me_nombres }}</li>
+                <li>
+                  <b>Especialidad :</b>
+                  {{ paciente.especialidad[i].es_descripcion }}
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
         <div class="d-flex flex-wrap w-100 px-2">
           <div class="w-50 mw-50 px-2">
+            <!--Registro-->
             <div class="card mt-3 border-0 shadow-card">
               <div class="card-body">
                 <div class="card-title mb-4"><h4>Registros</h4></div>
-                <div class="form-group">
+                <div class="form-label-group">
                   <textarea
+                    id="motivo"
                     class="form-control"
                     placeholder="Motivo de Consulta"
                     formControlName="motivo"
                   ></textarea>
+                  <label for="motivo">Motivo de Consulta</label>
                 </div>
-                <div class="form-group">
+                <div class="form-label-group">
                   <textarea
+                    id="enfermedad"
                     class="form-control"
                     placeholder="Enfermedad o Problema Actual"
                     formControlName="enfermedad"
                   ></textarea>
+                  <label for="enfermedad">Enfermedad o Problema Actual</label>
                 </div>
-                <div class="form-group">
+                <div class="form-label-group">
                   <textarea
+                    id="examen"
                     class="form-control"
                     placeholder="Examen Fisico"
                     formControlName="examen"
                   ></textarea>
+                  <label for="examen">Examen Fisico</label>
                 </div>
               </div>
             </div>
+            <!--Signo Vitales-->
             <div class="card mt-3 border-0 shadow-card">
               <div class="card-body">
-                <div class="card-title mb-4">
-                  <h4>Signos Vitales</h4>
-                </div>
+                <div class="card-title mb-4"><h4>Signos Vitales</h4></div>
                 <div class="d-flex flex-wrap w-100 justify-content-between">
                   <div class="w-50 mw-50 p-1">
-                    <div class="form-group">
+                    <div class="form-label-group">
                       <input
                         type="text"
-                        name="arterial"
+                        id="presion"
                         class="form-control"
-                        formControlName="arterial"
                         placeholder="Presion Arterial"
-                        autocomplete="on"
+                        formControlName="arterial"
                       />
+                      <label for="presion">Presion Arterial</label>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-label-group">
                       <input
                         type="text"
-                        name="cardiaca"
+                        id="frecuencia"
                         class="form-control"
+                        placeholder="F. Cardiaca(min)"
                         formControlName="cardiaca"
-                        placeholder="Frencuencia Cardiaca(min)"
-                        autocomplete="on"
                       />
+                      <label for="frecuencia">F. Cardiaca(min)</label>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-label-group">
                       <input
                         type="text"
-                        name="respiratorio"
+                        id="respiratoria"
                         class="form-control"
+                        placeholder="F.Respiratoria(min)"
                         formControlName="respiratorio"
-                        placeholder="Frencuencia Respiratoria(min)"
-                        autocomplete="on"
                       />
+                      <label for="respiratoria">F.Respiratoria(min)</label>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-label-group">
                       <input
                         type="text"
-                        name="bucal"
+                        id="bucal"
                         class="form-control"
+                        placeholder="Temp. Bucal(c)"
                         formControlName="bucal"
-                        placeholder="Temperatura Bucal(c)"
-                        autocomplete="on"
                       />
+                      <label for="bucal">Temp. Bucal(c)</label>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-label-group">
                       <input
                         type="text"
-                        name="axilar"
+                        id="axiliar"
                         class="form-control"
+                        placeholder="Temp. Axilar(c)"
                         formControlName="axilar"
-                        placeholder="Temperatura Axilar(c)"
-                        autocomplete="on"
                       />
+                      <label for="axiliar">Temp. Axilar(c)</label>
                     </div>
                   </div>
                   <div class="w-50 mw-50 p-1">
-                    <div class="form-group">
+                    <div class="form-label-group">
                       <input
                         type="text"
-                        name="peso"
+                        id="peso"
                         class="form-control"
-                        formControlName="peso"
                         placeholder="Peso(kg)"
+                        formControlName="peso"
                       />
+                      <label for="peso">Peso(kg)</label>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-label-group">
                       <input
                         type="text"
-                        name="talla"
+                        id="talla"
                         class="form-control"
-                        formControlName="talla"
                         placeholder="Talla(m)"
-                      />
+                        formControlName="talla"
+                      /><label for="talla">Talla(m)</label>
                     </div>
-                    <div class="form-group">
+                    <div class="form-label-group">
                       <input
                         type="text"
-                        name="mcorporal"
+                        id="masa"
                         class="form-control"
+                        placeholder="I.Masa corporal"
                         formControlName="mcorporal"
-                        placeholder="I. Masa corporal"
-                      />
+                      /><label for="masa">I.Masa corporal</label>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-label-group">
                       <input
                         type="text"
-                        name="cefalico"
+                        id="perim"
                         class="form-control"
+                        placeholder="Perim Cefalico(cm)"
                         formControlName="cefalico"
-                        placeholder="Perimetro Cefalico(cm)"
-                      />
+                      /><label for="perim">Perim Cefalico(cm)</label>
                     </div>
                   </div>
                 </div>
@@ -152,6 +164,7 @@
             </div>
           </div>
           <div class="w-50 mw-50 px-2">
+            <!--Antecedentes-->
             <div class="card mt-3 border-0 shadow-card">
               <div class="card-body">
                 <div class="card-title mb-4"><h4>Antecedentes</h4></div>
@@ -169,6 +182,17 @@
                     >
                   </select>
                 </div>
+
+                <div class="form-label-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="personal"
+                    placeholder="Descripcion personal"
+                  />
+                  <label for="personal">Descripcion personal</label>
+                </div>
+
                 <div class="form-group">
                   <select
                     class="custom-select form-control"
@@ -183,19 +207,31 @@
                     >
                   </select>
                 </div>
+
+                <div class="form-label-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="familiares"
+                    placeholder="Descripcion familiares"
+                  />
+                  <label for="familiares">Descripcion personal</label>
+                </div>
               </div>
             </div>
+            <!--Diagnostico-->
             <div class="card mt-3 border-0 shadow-card">
               <div class="card-body">
                 <div class="card-title mb-4"><h4>Diagnosticos</h4></div>
-                <div class="form-group">
+                <div class="form-label-group">
                   <input
                     type="text"
                     class="form-control"
                     formControlName="inpcie"
-                    name="cie"
+                    id="cie"
                     placeholder="Cie10"
                   />
+                  <label for="cie">Cie10</label>
                 </div>
                 <div class="mb-2">
                   <ul class="list-group">
@@ -221,8 +257,10 @@
                 </div>
               </div>
             </div>
-            <!--DIAGNOSTICO-->
-            <div class="card mt-3 border-0 shadow-card">
+            <div
+              class="card mt-3 border-0 shadow-card"
+              *ngIf="selectCies.length > 0"
+            >
               <div class="card-body">
                 <div class="card-title mb-4"><h4>Cie seleccionado</h4></div>
                 <div
@@ -255,6 +293,22 @@
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+            <!--Atencion-->
+            <div class="card mt-3 border-0 shadow-card">
+              <div class="card-body">
+                <div class="card-title mb-4"><h4>Destino de Atencion</h4></div>
+                <select
+                  class="custom-select form-control"
+                  formControlName="destino"
+                >
+                  <option value="null">seleccionar de Atencion</option>
+                  <option value="1">Recita</option>
+                  <option value="2">Interconsulta</option>
+                  <option value="3">Alta</option>
+                  <option value="4">Referencia</option>
+                </select>
               </div>
             </div>
           </div>

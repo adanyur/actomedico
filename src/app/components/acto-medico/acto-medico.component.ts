@@ -23,13 +23,13 @@ import swal from 'sweetalert2';
 export class ActoMedicoComponent implements OnInit {
   formActaMedica: FormGroup;
   pacientes: Paciente;
-  idcita: any;
+  cieSelect: CieSelect;
   antPersonales = [];
   antFamiliares = [];
   selectCies = [];
-  cieSelect: CieSelect;
-  cies: any;
   page: number = 1;
+  idcita: any;
+  cies: any;
 
   constructor(private fb: FormBuilder, private dataService: DataService) {
     this.formActaMedica = this.fb.group({
@@ -48,33 +48,25 @@ export class ActoMedicoComponent implements OnInit {
       anPersonales: [null, Validators.required],
       anFamiliares: [null, Validators.required],
       inpcie: [null, Validators.required],
+      destino: [null, Validators.required],
     });
   }
 
   ngOnInit(): void {
+    this.getDatoPaciente();
+    this.getAntecedentes();
+    this.CalcularIMC();
     this.formActaMedica
       .get('inpcie')
       .valueChanges.pipe(debounceTime(300), distinctUntilChanged())
       .subscribe((data: string) => this.getCie(data.toUpperCase()));
-    this.getDatoPaciente();
-    this.getAntecedentes();
-    this.CalcularIMC();
   }
 
-  CalcularIMC() {
-    let peso$ = this.formActaMedica.get('peso').valueChanges;
-    let talla$ = this.formActaMedica.get('talla').valueChanges;
-    combineLatest(peso$, talla$)
-      .pipe(map(([peso, talla]) => peso / (talla * talla)))
-      .subscribe((data) =>
-        this.formActaMedica.controls.mcorporal.setValue(data)
-      );
-  }
-
+  /**DATO DEL API**/
   getDatoPaciente(): void {
-    this.dataService.datoPaciente().subscribe((paciente?: Paciente) => {
-      this.pacientes = paciente['data'];
-      this.idcita = paciente['data'];
+    this.dataService.datoPaciente().subscribe((paciente: Paciente) => {
+      this.pacientes = paciente;
+      this.idcita = paciente;
     });
   }
 
@@ -84,7 +76,6 @@ export class ActoMedicoComponent implements OnInit {
       this.familiares(ant);
     });
   }
-  /********************************************/
 
   personales(data: any) {
     from(data)
@@ -109,8 +100,8 @@ export class ActoMedicoComponent implements OnInit {
       this.cies = data;
     });
   }
-  /********************************************/
 
+  /**Seleccion de cie 10**/
   addCie(data: any): void {
     if (
       this.selectCies.find((resutl) => resutl.codigo === data.codigo) !==
@@ -138,13 +129,25 @@ export class ActoMedicoComponent implements OnInit {
     this.selectCies[indice].tdiag = data.target.value;
   }
 
-  postRegistroActoMedico() {
+  /*****/
+  CalcularIMC() {
+    let peso$ = this.formActaMedica.get('peso').valueChanges;
+    let talla$ = this.formActaMedica.get('talla').valueChanges;
+    combineLatest(peso$, talla$)
+      .pipe(map(([peso, talla]) => peso / (talla * talla)))
+      .subscribe((data) =>
+        this.formActaMedica.controls.mcorporal.setValue(data)
+      );
+  }
+
+  /**Envio de datos**/
+  postRegistroActoMedico(): void {
     this.dataService
       .ActoMedico(
         this.formActaMedica.value,
         this.idcita[0].ci_idcita,
         this.selectCies
       )
-      .subscribe((data) => console.log(data));
+      .subscribe((data) => swal.fire('Se registro', '', 'success'));
   }
 }
