@@ -173,11 +173,12 @@
                     class="custom-select form-control"
                     formControlName="anPersonales"
                   >
-                    <option value="null">PERSONALES Y ALERGIAS</option>
+                    <option [ngValue]="null">PERSONALES Y ALERGIAS</option>
                     <option
                       *ngFor="let personal of antPersonales"
                       [ngValue]="personal.an_codigo"
                     >
+                      {{ personal.an_destipo }} /
                       {{ personal.an_descripcion }}</option
                     >
                   </select>
@@ -189,6 +190,7 @@
                     class="form-control"
                     id="personal"
                     placeholder="Descripcion personal"
+                    formControlName="dpersonal"
                   />
                   <label for="personal">Descripcion personal</label>
                 </div>
@@ -198,11 +200,12 @@
                     class="custom-select form-control"
                     formControlName="anFamiliares"
                   >
-                    <option value="null">FAMILIARES</option>
+                    <option [ngValue]="null">FAMILIARES</option>
                     <option
                       *ngFor="let familiares of antFamiliares"
                       [ngValue]="familiares.an_codigo"
                     >
+                      {{ familiares.an_destipo }} /
                       {{ familiares.an_descripcion }}</option
                     >
                   </select>
@@ -214,8 +217,9 @@
                     class="form-control"
                     id="familiares"
                     placeholder="Descripcion familiares"
+                    formControlName="dfamiliares"
                   />
-                  <label for="familiares">Descripcion personal</label>
+                  <label for="familiares">Descripcion familiares</label>
                 </div>
               </div>
             </div>
@@ -248,7 +252,7 @@
                       >
                       {{ cie.descripcion }}
                     </li>
-                    <li class="list-group-item" *ngIf="cies">
+                    <li class="list-group-item">
                       <pagination-controls
                         (pageChange)="page = $event"
                       ></pagination-controls>
@@ -257,6 +261,7 @@
                 </div>
               </div>
             </div>
+            <!--Selection cie-->
             <div
               class="card mt-3 border-0 shadow-card"
               *ngIf="selectCies.length > 0"
@@ -303,11 +308,11 @@
                   class="custom-select form-control"
                   formControlName="destino"
                 >
-                  <option value="null">seleccionar de Atencion</option>
-                  <option value="1">Recita</option>
-                  <option value="2">Interconsulta</option>
-                  <option value="3">Alta</option>
-                  <option value="4">Referencia</option>
+                  <option value="null">SELECCIONAR DE ATENCION</option>
+                  <option value="1">RECITA</option>
+                  <option value="2">INTERCONSULTA</option>
+                  <option value="3">ALTA</option>
+                  <option value="4">REFERENCIA</option>
                 </select>
               </div>
             </div>

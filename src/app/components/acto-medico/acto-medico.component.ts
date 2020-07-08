@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { from, combineLatest } from 'rxjs';
 import {
   debounceTime,
@@ -31,7 +32,11 @@ export class ActoMedicoComponent implements OnInit {
   idcita: any;
   cies: any;
 
-  constructor(private fb: FormBuilder, private dataService: DataService) {
+  constructor(
+    private fb: FormBuilder,
+    private dataService: DataService,
+    private router: Router
+  ) {
     this.formActaMedica = this.fb.group({
       motivo: [null, Validators.required],
       enfermedad: [null, Validators.required],
@@ -45,15 +50,17 @@ export class ActoMedicoComponent implements OnInit {
       talla: [null, Validators.required],
       mcorporal: [null, Validators.required],
       cefalico: [null, Validators.required],
-      anPersonales: [null, Validators.required],
-      anFamiliares: [null, Validators.required],
       inpcie: [null, Validators.required],
       destino: [null, Validators.required],
+      anPersonales: [null, Validators.required],
+      anFamiliares: [null, Validators.required],
+      dpersonal: [null, Validators.required],
+      dfamiliares: [null, Validators.required],
     });
   }
 
   ngOnInit(): void {
-    this.getDatoPaciente();
+    this.getDatoPaciente(this.dataService.id);
     this.getAntecedentes();
     this.CalcularIMC();
     this.formActaMedica
@@ -62,9 +69,13 @@ export class ActoMedicoComponent implements OnInit {
       .subscribe((data: string) => this.getCie(data.toUpperCase()));
   }
 
-  /**DATO DEL API**/
-  getDatoPaciente(): void {
-    this.dataService.datoPaciente().subscribe((paciente: Paciente) => {
+  /**API**/
+  getDatoPaciente(id: number): void {
+    if (!id) {
+      this.router.navigateByUrl('pacientes');
+      return;
+    }
+    this.dataService.datoPaciente(id).subscribe((paciente: Paciente) => {
       this.pacientes = paciente;
       this.idcita = paciente;
     });
