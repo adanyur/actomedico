@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ɵConsole } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { from, combineLatest } from 'rxjs';
@@ -66,7 +66,9 @@ export class ActoMedicoComponent implements OnInit {
     this.formActaMedica
       .get('inpcie')
       .valueChanges.pipe(debounceTime(300), distinctUntilChanged())
-      .subscribe((data: string) => this.getCie(data.toUpperCase()));
+      .subscribe((data: string) => {
+        this.getCie(data.toUpperCase());
+      });
   }
 
   /**API**/
@@ -83,12 +85,12 @@ export class ActoMedicoComponent implements OnInit {
 
   getAntecedentes(): void {
     this.dataService.listadoAntecedentes().subscribe((ant) => {
-      this.personales(ant);
-      this.familiares(ant);
+      this.AntPersonales(ant);
+      this.AntFamiliares(ant);
     });
   }
 
-  personales(data: any) {
+  AntPersonales(data: any) {
     from(data)
       .pipe(
         filter(
@@ -100,7 +102,7 @@ export class ActoMedicoComponent implements OnInit {
       .subscribe((data: Ant) => this.antPersonales.push(data));
   }
 
-  familiares(data: any) {
+  AntFamiliares(data: any) {
     from(data)
       .pipe(filter((fam: Ant) => fam.an_destipo === 'FAMILIARES'))
       .subscribe((data: Ant) => this.antFamiliares.push(data));
@@ -146,9 +148,10 @@ export class ActoMedicoComponent implements OnInit {
     let talla$ = this.formActaMedica.get('talla').valueChanges;
     combineLatest(peso$, talla$)
       .pipe(map(([peso, talla]) => peso / (talla * talla)))
-      .subscribe((data) =>
-        this.formActaMedica.controls.mcorporal.setValue(data)
-      );
+      .subscribe((data) => {
+        const IMC = data === NaN ? 0.0 : data === Infinity ? 0.0 : data;
+        this.formActaMedica.controls.mcorporal.setValue(IMC);
+      });
   }
 
   /**Envio de datos**/

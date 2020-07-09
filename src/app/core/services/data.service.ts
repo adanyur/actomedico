@@ -29,8 +29,7 @@ export class DataService {
     this.session = this.storageService.getSessionData();
     this.header = new HttpHeaders({
       Accept: 'application/json',
-      //Authorization: `Bearer ${this.token['data'].token}`,
-      Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiODAyYWM1MGFmNjZmNGUzNTdlMjZiNzNmZGQ1NjFlZGJiMjZjMjU1YWU5ZGM1MmY1MDExZDRjZTI1MTgzNjcwM2JkNDEzNzlkNDJkNmZiOGUiLCJpYXQiOjE1OTMxODQ2NjgsIm5iZiI6MTU5MzE4NDY2OCwiZXhwIjoxNjI0NzIwNjY4LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.pdfrzlZ_8slc42MCgRVLr2bhKk9XIGKn3dpGcOSe1Cizfg_OVq71jXTtM3hf568a4UJh5LvCYuuqW4szdS7PXM-XmQWIcHHVJexDpNkmvwwmlykcP8evotLQPT8OMz5sorZW_yjYwKtDTV611ViXYueUMvTrBWa6rz0Y91IW_kmrohpI42OtYxsuYOP9DzVLP9_mP9jteeSf6O7ULnnIXU0Fcs1UGh_raPlyrrPEgnw8T5dcTlMty-REu0DDBWj3KK2EG02LbNf-xtj5EkFnpYgW58-4yn3NsvRQxd8rcMlRXqcGpBS5e8TOm-nWlF1G7NC3ZQpwhF_mHaCALfFyPvEuuyQxvH1pVGCUgYmOjTl3bjCMKcV_NdQAg8u-p4NskFCBvCdmkTvH0Vfsfu0RgobwT69ZUMq9galaTBwA6YK7E1kWKhrIVwATaXeKCJQAlOLFiXrJhjVb3IGpCDGJRCd8spewRo4AS9n1CttZ7ynGZCrT7iiXnIL5RdA0yLUAS3iIRqvCr9KfBu1M_Y7Zoqs8rFfQvi_YM5kXvPSDo08_ViBisfA9gWBANepF1_NxAQlYqVRW2QPkuwnJbCr6Z0vJodFozR9efrf7NQGtBnABO9YriVnZaGRoxWoV_Y6PaKJfbWXsvEApsBOP36DWF7e7HJ80Q1czX6CGYe6utpY`,
+      Authorization: `Bearer ${this.session['data'].token}`,
     });
   }
 

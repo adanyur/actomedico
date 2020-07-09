@@ -274,7 +274,10 @@
                 >
                   <div class="card-body">
                     <div class="card-title">
-                      <b>{{ selectCie.codigo }}</b>
+                      <div class="d-flex justify-content-between">
+                        <b>{{ selectCie.codigo }}</b>
+                        <b (click)="deleteCie(selectCie)">X</b>
+                      </div>
                     </div>
                     <div class="card-text mb-3 mt-2">
                       {{ selectCie.descripcion }}
