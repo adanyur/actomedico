@@ -23,6 +23,7 @@ export class AuthComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.SessionValidation();
     this.formLogin = this.fb.group({
       name: [null, Validators.required],
       password: [null, Validators.required],
@@ -33,6 +34,12 @@ export class AuthComponent implements OnInit {
     this.authService
       .Login(this.formLogin.value)
       .subscribe((data) => this.correctLogin(data));
+  }
+
+  private SessionValidation() {
+    this.storageService.getSessionData()['data'].token.length > 0
+      ? this.router.navigate(['pacientes'])
+      : this.router.navigate(['']);
   }
 
   private correctLogin(data: Session) {
