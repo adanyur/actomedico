@@ -36,6 +36,21 @@
                     formControlName="motivo"
                   ></textarea>
                   <label for="motivo">Motivo de Consulta</label>
+                  <div
+                    *ngIf="
+                      formActaMedicaControl.motivo.invalid &&
+                      (formActaMedicaControl.motivo.dirty ||
+                        formActaMedicaControl.motivo.touched)
+                    "
+                  >
+                    <div *ngIf="formActaMedicaControl.motivo.errors?.required">
+                      <small class="text-muted ml-3"
+                        ><em class="text-danger"
+                          >Ingresar el motivo de la consulta</em
+                        ></small
+                      >
+                    </div>
+                  </div>
                 </div>
                 <div class="form-label-group">
                   <textarea
@@ -269,7 +284,7 @@
               <div class="card-body">
                 <div class="card-title mb-4"><h4>Cie seleccionado</h4></div>
                 <div
-                  class="card"
+                  class="card mb-2"
                   *ngFor="let selectCie of selectCies; index as i"
                 >
                   <div class="card-body">

@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 //
 import { StorageService } from './storage.service';
 //
+import { ListadoPaciente } from '../models/listado-pacientes.models';
 import { Session } from '../models/session.models';
 import { Paciente } from '../models/paciente.models';
 import { Ant } from '../models/ant.models';
@@ -37,31 +39,35 @@ export class DataService {
     this.id = id;
   }
 
-  getPacientesCitados(): Observable<any> {
+  getPacientesCitados(): Observable<ListadoPaciente[]> {
     const fecha = moment().format('YYYY-MM-DD');
-    const URL = ` http://192.168.10.139:8001/api/citas?fecha=${fecha}&medico=${this.session['data'].id}`;
-    return this.http.get<any>(URL, { headers: this.header });
+    const URL = `${environment.apiURL}/citas?fecha=${fecha}&medico=${this.session['data'].id}`;
+    return this.http
+      .get<ListadoPaciente[]>(URL, { headers: this.header })
+      .pipe(
+        catchError(this.handleError<ListadoPaciente[]>('Pacientes citados', []))
+      );
   }
 
   datoPaciente(id: number): Observable<Paciente> {
-    const URL = ` http://192.168.10.139:8001/api`;
-    return this.http.get<Paciente>(`${URL}/citas/${id}`, {
-      headers: this.header,
-    });
+    const URL = `${environment.apiURL}/citas/${id}`;
+    return this.http
+      .get<Paciente>(URL, { headers: this.header })
+      .pipe(catchError(this.handleError<Paciente>('Pacientes')));
   }
 
   listadoAntecedentes(): Observable<Ant[]> {
-    const URL = `http://192.168.10.139:8001/api`;
-    return this.http.get<Ant[]>(`${URL}/antecedentes`, {
-      headers: this.header,
-    });
+    const URL = `${environment.apiURL}/antecedentes`;
+    return this.http
+      .get<Ant[]>(URL, { headers: this.header })
+      .pipe(catchError(this.handleError<Ant[]>('Antecedentes', [])));
   }
 
   searchCie(term: string): Observable<Cie[]> {
     if (!term.trim()) {
       return of([]);
     }
-    const URL = `http://192.168.10.139:8001/api/cies?search=${term}`;
+    const URL = `${environment.apiURL}/cies?search=${term}`;
     return this.http
       .get<Cie[]>(URL, { headers: this.header })
       .pipe(catchError(this.handleError<Cie[]>('searchCie', [])));
@@ -96,7 +102,7 @@ export class DataService {
       usuario: this.session['data'].name,
     };
 
-    const URL = `http://192.168.10.139:8001/api/actomedicos`;
+    const URL = `${environment.apiURL}/actomedicos`;
     return this.http.post(URL, this.actoMedico, { headers: this.header });
   }
 

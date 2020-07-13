@@ -1,4 +1,4 @@
-import { Component, OnInit, ɵConsole } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { from, combineLatest } from 'rxjs';
@@ -27,6 +27,7 @@ export class ActoMedicoComponent implements OnInit {
   cieSelect: CieSelect;
   antPersonales = [];
   antFamiliares = [];
+  antecedentes = [];
   selectCies = [];
   page: number = 1;
   idcita: any;
@@ -59,13 +60,17 @@ export class ActoMedicoComponent implements OnInit {
     });
   }
 
+  get formActaMedicaControl() {
+    return this.formActaMedica.controls;
+  }
+
   ngOnInit(): void {
     this.getDatoPaciente(this.dataService.id);
     this.getAntecedentes();
     this.CalcularIMC();
     this.formActaMedica
       .get('inpcie')
-      .valueChanges.pipe(debounceTime(300), distinctUntilChanged())
+      .valueChanges.pipe(debounceTime(700), distinctUntilChanged())
       .subscribe((data: string) => {
         this.getCie(data.toUpperCase());
       });
@@ -149,8 +154,7 @@ export class ActoMedicoComponent implements OnInit {
     combineLatest(peso$, talla$)
       .pipe(map(([peso, talla]) => peso / (talla * talla)))
       .subscribe((data) => {
-        const IMC = data === NaN ? 0.0 : data === Infinity ? 0.0 : data;
-        this.formActaMedica.controls.mcorporal.setValue(IMC);
+        this.formActaMedica.controls.mcorporal.setValue(data);
       });
   }
 
@@ -162,6 +166,9 @@ export class ActoMedicoComponent implements OnInit {
         this.idcita[0].ci_idcita,
         this.selectCies
       )
-      .subscribe((data) => swal.fire('Se registro', '', 'success'));
+      .subscribe((data) => {
+        this.router.navigateByUrl('pacientes'),
+          swal.fire('Se registro el Parte diario', '', 'success');
+      });
   }
 }

@@ -1,5 +1,5 @@
 export interface Ant {
-  an_destipo?: string;
-  an_codigo?: string;
-  an_descripcion?: string;
+  an_destipo: string;
+  an_codigo: string;
+  an_descripcion: string;
 }
