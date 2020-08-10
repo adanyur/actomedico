@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DataService } from 'src/app/core/services/data.service';
 import { Router } from '@angular/router';
 //
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
+//
+import { DataService } from '../../core/services/data.service';
 
 @Component({
   selector: 'app-paciente-citados',
@@ -18,8 +19,8 @@ export class PacienteCitadosComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
     'hora',
-    'ci_numhist',
-    'nombre_completo',
+    'historia',
+    'paciente',
     'actions',
   ];
   constructor(private dataService: DataService, private router: Router) {}
@@ -28,18 +29,11 @@ export class PacienteCitadosComponent implements OnInit {
   }
 
   getSelectPacienteCitados() {
-    this.dataService.getPacientesCitados().subscribe(
-      (data) => {
-        if (data) {
-          this.dataSource.data = data;
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
-        }
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+    this.dataService.getPacientesCitados().subscribe((data) => {
+      this.dataSource.data = data;
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
   }
 
   getActaMedico(id: number) {

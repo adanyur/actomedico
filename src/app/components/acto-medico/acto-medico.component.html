@@ -11,13 +11,10 @@
           <div class="card-body">
             <div class="card-title mb-4"><h4>Datos del paciente</h4></div>
             <div class="card-text">
-              <ul *ngFor="let paciente of pacientes; index as i">
-                <li><b>Paciente :</b> {{ paciente.nombre_completo }}</li>
-                <li><b>Medico :</b> {{ paciente.medico[i].me_nombres }}</li>
-                <li>
-                  <b>Especialidad :</b>
-                  {{ paciente.especialidad[i].es_descripcion }}
-                </li>
+              <ul *ngFor="let paciente of pacientes$ | async">
+                <li><b>Paciente :</b> {{ paciente.paciente }}</li>
+                <li><b>Medico :</b> {{ paciente.medico }}</li>
+                <li><b>Especialidad :</b>{{ paciente.especialidad }}</li>
               </ul>
             </div>
           </div>
@@ -191,10 +188,9 @@
                     <option [ngValue]="null">PERSONALES Y ALERGIAS</option>
                     <option
                       *ngFor="let personal of antPersonales"
-                      [ngValue]="personal.an_codigo"
+                      [ngValue]="personal.id"
                     >
-                      {{ personal.an_destipo }} /
-                      {{ personal.an_descripcion }}</option
+                      {{ personal.tipo }} / {{ personal.descripcion }}</option
                     >
                   </select>
                 </div>
@@ -218,10 +214,10 @@
                     <option [ngValue]="null">FAMILIARES</option>
                     <option
                       *ngFor="let familiares of antFamiliares"
-                      [ngValue]="familiares.an_codigo"
+                      [ngValue]="familiares.id"
                     >
-                      {{ familiares.an_destipo }} /
-                      {{ familiares.an_descripcion }}</option
+                      {{ familiares.tipo }} /
+                      {{ familiares.descripcion }}</option
                     >
                   </select>
                 </div>
@@ -258,12 +254,13 @@
                       (click)="addCie(cie)"
                       class="list-group-item"
                       *ngFor="
-                        let cie of cies
+                        let cie of cies$
+                          | async
                           | paginate: { itemsPerPage: 5, currentPage: page }
                       "
                     >
                       <span
-                        ><b>{{ cie.codigo }}</b></span
+                        ><b>{{ cie.cie }}</b></span
                       >
                       {{ cie.descripcion }}
                     </li>

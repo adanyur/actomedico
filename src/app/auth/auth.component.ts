@@ -5,7 +5,8 @@ import { Router } from '@angular/router';
 import { AuthService } from './service/auth.service';
 import { StorageService } from '../core/services/storage.service';
 ///
-import { Session } from '../core/models/session.models';
+import { Auth } from './models/auth.models';
+import { Session } from '../core/models';
 
 @Component({
   selector: 'app-auth',
@@ -23,7 +24,6 @@ export class AuthComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    //this.SessionValidation();
     this.formLogin = this.fb.group({
       name: [null, Validators.required],
       password: [null, Validators.required],
@@ -32,15 +32,9 @@ export class AuthComponent implements OnInit {
 
   SubmitLogin() {
     this.authService
-      .Login(this.formLogin.value)
+      .Login(new Auth(this.formLogin.value))
       .subscribe((data) => this.correctLogin(data));
   }
-
-  // private SessionValidation() {
-  //   this.storageService.getSessionData()['data'].token.length > 0
-  //     ? this.router.navigate(['pacientes'])
-  //     : this.router.navigate(['']);
-  // }
 
   private correctLogin(data: Session) {
     this.storageService.setSession(data);

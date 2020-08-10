@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { from, combineLatest } from 'rxjs';
+import { from, combineLatest, Observable } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -11,9 +11,8 @@ import {
 //
 import { DataService } from '../../core/services/data.service';
 //
-import { Paciente } from '../../core/models/paciente.models';
-import { Ant } from '../../core/models/ant.models';
-import { CieSelect } from '../../core/models/cie-select.models';
+import { Paciente, Ant, Cie, CieSelect } from '../../core/models';
+//
 import swal from 'sweetalert2';
 
 @Component({
@@ -22,16 +21,15 @@ import swal from 'sweetalert2';
   styleUrls: ['./acto-medico.component.css'],
 })
 export class ActoMedicoComponent implements OnInit {
+  pacientes$: Observable<Paciente[]>;
+  cies$: Observable<Cie[]>;
   formActaMedica: FormGroup;
-  pacientes: Paciente;
   cieSelect: CieSelect;
   antPersonales = [];
   antFamiliares = [];
-  antecedentes = [];
   selectCies = [];
   page: number = 1;
   idcita: any;
-  cies: any;
 
   constructor(
     private fb: FormBuilder,
@@ -70,7 +68,7 @@ export class ActoMedicoComponent implements OnInit {
     this.CalcularIMC();
     this.formActaMedica
       .get('inpcie')
-      .valueChanges.pipe(debounceTime(700), distinctUntilChanged())
+      .valueChanges.pipe(debounceTime(300), distinctUntilChanged())
       .subscribe((data: string) => {
         this.getCie(data.toUpperCase());
       });
@@ -82,10 +80,7 @@ export class ActoMedicoComponent implements OnInit {
       this.router.navigateByUrl('pacientes');
       return;
     }
-    this.dataService.datoPaciente(id).subscribe((paciente: Paciente) => {
-      this.pacientes = paciente;
-      this.idcita = paciente;
-    });
+    this.pacientes$ = this.dataService.datoPaciente(id);
   }
 
   getAntecedentes(): void {
@@ -100,8 +95,7 @@ export class ActoMedicoComponent implements OnInit {
       .pipe(
         filter(
           (person: Ant) =>
-            person.an_destipo === 'PERSONALES' ||
-            person.an_destipo === 'ALERGIAS'
+            person.tipo === 'PERSONALES' || person.tipo === 'ALERGIAS'
         )
       )
       .subscribe((data: Ant) => this.antPersonales.push(data));
@@ -109,14 +103,12 @@ export class ActoMedicoComponent implements OnInit {
 
   AntFamiliares(data: any) {
     from(data)
-      .pipe(filter((fam: Ant) => fam.an_destipo === 'FAMILIARES'))
+      .pipe(filter((fam: Ant) => fam.tipo === 'FAMILIARES'))
       .subscribe((data: Ant) => this.antFamiliares.push(data));
   }
 
   getCie(data: string): void {
-    this.dataService.searchCie(data).subscribe((data) => {
-      this.cies = data;
-    });
+    this.cies$ = this.dataService.searchCie(data);
   }
 
   /**Seleccion de cie 10**/
@@ -125,17 +117,10 @@ export class ActoMedicoComponent implements OnInit {
       this.selectCies.find((resutl) => resutl.codigo === data.codigo) !==
       undefined
     ) {
-      swal.fire('Ya selecciono el cie', '', 'error');
+      swal.fire({ title: '<h4>Ya selecciono el cie</h4>', icon: 'info' });
       return;
     }
-
-    this.cieSelect = {
-      codigo: data.codigo,
-      descripcion: data.descripcion,
-      tdiag: 1,
-    };
-
-    this.selectCies.push(this.cieSelect);
+    this.selectCies.push(new CieSelect(data));
   }
 
   deleteCie(data: any) {
@@ -149,8 +134,8 @@ export class ActoMedicoComponent implements OnInit {
 
   /*****/
   CalcularIMC() {
-    let peso$ = this.formActaMedica.get('peso').valueChanges;
-    let talla$ = this.formActaMedica.get('talla').valueChanges;
+    const peso$ = this.formActaMedica.get('peso').valueChanges;
+    const talla$ = this.formActaMedica.get('talla').valueChanges;
     combineLatest(peso$, talla$)
       .pipe(map(([peso, talla]) => peso / (talla * talla)))
       .subscribe((data) => {
@@ -163,12 +148,16 @@ export class ActoMedicoComponent implements OnInit {
     this.dataService
       .ActoMedico(
         this.formActaMedica.value,
-        this.idcita[0].ci_idcita,
+        // this.idcita[0].ci_idcita,
+        561458,
         this.selectCies
       )
       .subscribe((data) => {
         this.router.navigateByUrl('pacientes'),
-          swal.fire('Se registro el Parte diario', '', 'success');
+          swal.fire({
+            title: '<h4>Se registro el Parte diario</h4>',
+            icon: 'success',
+          });
       });
   }
 }

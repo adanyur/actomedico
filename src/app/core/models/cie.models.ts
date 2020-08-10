@@ -1,4 +1,4 @@
 export interface Cie {
-  codigo: string;
+  cie: string;
   descripcion: string;
 }

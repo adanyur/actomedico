@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 //
-import { Session } from '../models/session.models';
+import { Session } from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -12,11 +12,11 @@ export class StorageService {
   }
 
   setSession(data: Session): void {
-    this.localStorageService.setItem('usuario', JSON.stringify(data));
+    this.localStorageService.setItem('session', JSON.stringify(data));
   }
 
   getSessionData(): Session {
-    let session = JSON.parse(this.localStorageService.getItem('usuario'));
+    let session = JSON.parse(this.localStorageService.getItem('session'));
     return session ? session : null;
   }
 
