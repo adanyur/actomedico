@@ -31,7 +31,7 @@ export class DataService {
     this.session = this.storageService.getSessionData();
     this.header = new HttpHeaders({
       Accept: 'application/json',
-      Authorization: `Bearer ${this.session['data'].token}`,
+      //Authorization: `Bearer ${this.session['data'].token}`,
     });
   }
 
@@ -41,7 +41,8 @@ export class DataService {
 
   getPacientesCitados(): Observable<ListadoPaciente[]> {
     const fecha = moment().format('YYYY-MM-DD');
-    const URL = `${environment.apiURL}/citas?fecha=${fecha}&medico=${this.session['data'].id}`;
+    //const URL = `${environment.apiURL}/citas?fecha=${fecha}&medico=${this.session['data'].id}`;
+    const URL = `${environment.apiURL}/citas?fecha=2020-07-08&medico=095`;
     return this.http.get<ListadoPaciente[]>(URL, { headers: this.header });
   }
 

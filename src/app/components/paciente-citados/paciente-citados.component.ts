@@ -24,6 +24,7 @@ export class PacienteCitadosComponent implements OnInit {
     'actions',
   ];
   constructor(private dataService: DataService, private router: Router) {}
+
   ngOnInit(): void {
     this.getSelectPacienteCitados();
   }

@@ -76,10 +76,10 @@ export class ActoMedicoComponent implements OnInit {
 
   /**API**/
   getDatoPaciente(id: number): void {
-    if (!id) {
-      this.router.navigateByUrl('pacientes');
-      return;
-    }
+    // if (!id) {
+    //   this.router.navigateByUrl('pacientes');
+    //   return;
+    // }
     this.pacientes$ = this.dataService.datoPaciente(id);
   }
 
